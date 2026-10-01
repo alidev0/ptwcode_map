@@ -4,14 +4,14 @@ import '../models/pixel_point.dart';
 
 class Helper extends InheritedWidget {
   const Helper({
-    Key? key,
+    super.key,
     required this.mapScale,
     required this.center,
     required this.size,
     required this.markerRad,
     required this.clusterRad,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final double mapScale;
   final PixelPoint center;

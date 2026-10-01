@@ -32,10 +32,13 @@ class MarkerLayer extends StatelessWidget {
     final clusterRad = Helper.clusterRadOf(context);
 
     var allCircles = markers
-        .map((el) => Circle(
+        .map(
+          (el) => Circle(
             marker: el,
             clusterRad: clusterRad,
-            pixel: latLonToPixelPoint(latLon: el.latLon, mapScale: mapScale)))
+            pixel: latLonToPixelPoint(latLon: el.latLon, mapScale: mapScale),
+          ),
+        )
         .toList();
 
     List<Marker> newMarkes = [];
@@ -72,12 +75,14 @@ class MarkerLayer extends StatelessWidget {
           return PositionedMarker(
             marker: marker,
             builder: markerBuilder,
-            point:
-                latLonToPixelPoint(latLon: marker.latLon, mapScale: mapScale),
+            point: latLonToPixelPoint(
+              latLon: marker.latLon,
+              mapScale: mapScale,
+            ),
             onTap: () {},
             mapCenter: center,
           );
-        }).toList(),
+        }),
         ...clusters.map((cluster) {
           return PositionedCluster(
             point: getCirclesPixelCentroid(cluster),
@@ -91,7 +96,7 @@ class MarkerLayer extends StatelessWidget {
             mapCenter: center,
             builder: clusterBuilder,
           );
-        }).toList(),
+        }),
       ],
     );
   }

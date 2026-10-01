@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../calculations/calculator.dart';
 import '../models/pixel_point.dart';
 import 'helper.dart';
+import 'style.dart';
 
 /// MyLocation
 class MyLocation extends StatelessWidget {
@@ -36,7 +37,7 @@ class MyLocation extends StatelessWidget {
       width: size,
       height: size,
       alignment: Alignment.center,
-      decoration: BoxDecoration(shape: shape, color: blue!.withOpacity(0.3)),
+      decoration: BoxDecoration(shape: shape, color: blue900T30Color),
       child: current,
     );
 

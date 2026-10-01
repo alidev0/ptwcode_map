@@ -117,7 +117,7 @@ class Bottom extends StatelessWidget {
       ],
     );
 
-    curent = ColoredBox(color: Colors.blue.withOpacity(0.5), child: curent);
+    curent = ColoredBox(color: blueColor.withValues(alpha: 0.5), child: curent);
 
     final debugIcon = debugMode ? Icons.deblur : Icons.deblur_outlined;
     final clusterIcon =
