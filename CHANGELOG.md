@@ -1,3 +1,6 @@
+## 1.4.1
+- fix ios example
+
 ## 1.4.0
 - expose zoom
 - environment: sdk: ^3.10.0
