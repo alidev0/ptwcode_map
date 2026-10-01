@@ -20,14 +20,16 @@ import 'models/polyline.dart';
 import 'models/tile_point.dart';
 import 'providers/main_prov.dart';
 import 'providers/tile_prov.dart';
+import 'tiles/preload_tiles.dart';
 import 'tiles/tile.dart';
 import 'tiles/tile_manager.dart';
-import 'ui/ctrl.dart';
 import 'ui/helper.dart';
 import 'ui/my_anim.dart';
 import 'ui/my_location.dart';
 import 'ui/polyline_layer.dart';
 import 'ui/top_indicator.dart';
+
+part 'ui/ctrl.dart';
 
 /// ptwcode map
 class PTWCodeMap extends StatefulWidget {
@@ -116,6 +118,7 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
   void initState() {
     _center = _initCenter;
     widget.ctrl.animateTo = _animateTo;
+    widget.ctrl._getZoom = () => _zoom;
     SchedulerBinding.instance.addPostFrameCallback((_) => _buildCallback());
     super.initState();
   }

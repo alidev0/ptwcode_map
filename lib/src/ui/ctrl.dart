@@ -1,10 +1,13 @@
-import '../debug/map_log.dart';
-import '../models/lat_lon.dart';
-import '../providers/main_prov.dart';
-import '../tiles/preload_tiles.dart';
+part of '../map.dart';
 
 /// MapCtrl
 class MapCtrl {
+  /// Reads the current zoom, or zero before the map is attached.
+  double Function() _getZoom = () => 0.0;
+
+  /// The current zoom level, or zero before the map is attached.
+  double get zoom => _getZoom();
+
   /// animate to a location
   late void Function(LatLon, double) animateTo;
 
