@@ -110,9 +110,9 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
 
   LatLon get _initLatLon => LatLon(42.03763925181516, 16.641153557869984);
   PixelPoint get _initCenter => latLonToPixelPoint(
-        latLon: LatLon(42.03763925181516, 16.641153557869984),
-        mapScale: 1.0,
-      );
+    latLon: LatLon(42.03763925181516, 16.641153557869984),
+    mapScale: 1.0,
+  );
 
   @override
   void initState() {
@@ -191,8 +191,11 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
 
     /// (clusterRadius / distance) with how much scale does point need to get out of center radius
     final scale = _mapScale * ((widget.clusterRadius * 2.5) / distance);
-    final zoom =
-        scaleToZoom(scale: scale, zoomRef: zoomRef, scaleRef: scaleRef);
+    final zoom = scaleToZoom(
+      scale: scale,
+      zoomRef: zoomRef,
+      scaleRef: scaleRef,
+    );
 
     _animateTo(circles.last.latLng, zoom);
   }
@@ -201,9 +204,9 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
       latLonToPixelPoint(latLon: latLon, mapScale: _mapScale);
 
   Size get _size => Size(
-        widget.width ?? MediaQuery.of(context).size.width,
-        widget.height ?? MediaQuery.of(context).size.height,
-      );
+    widget.width ?? MediaQuery.of(context).size.width,
+    widget.height ?? MediaQuery.of(context).size.height,
+  );
 
   void _boundCheck() {
     final fullW = _size.width;
@@ -347,9 +350,9 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
 
         Widget current = Stack(
           children: [
-            ..._loadedTiles
-                .map((model) => PositionedTile(zoom: _zoom, tile: model))
-                .toList(),
+            ..._loadedTiles.map(
+              (model) => PositionedTile(zoom: _zoom, tile: model),
+            ),
             if (widget.gps != null)
               MyLocation(
                 pixelPoint: _latLonToPixelPoint(widget.gps!),
@@ -389,7 +392,10 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
 
                 _mapScale = expand ? _mapScale * 1.03 : _mapScale / 1.04;
                 _zoom = scaleToZoom(
-                    scale: _mapScale, zoomRef: zoomRef, scaleRef: scaleRef);
+                  scale: _mapScale,
+                  zoomRef: zoomRef,
+                  scaleRef: scaleRef,
+                );
 
                 _keepCenterWhenScaling();
 
