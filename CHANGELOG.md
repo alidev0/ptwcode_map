@@ -1,5 +1,6 @@
 ## 1.4.1
 - fix ios example
+- update demo gif
 
 ## 1.4.0
 - expose zoom
