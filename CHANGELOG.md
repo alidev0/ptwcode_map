@@ -1,3 +1,8 @@
+## 1.4.0
+- expose zoom
+- environment: sdk: ^3.10.0
+- update dependencies
+
 ## 1.3.2
 - optim state change
 
