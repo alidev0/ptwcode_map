@@ -1,3 +1,7 @@
+## 1.4.2
+- reduce tile load
+- optim animation
+
 ## 1.4.1
 - fix ios example
 - update demo gif
