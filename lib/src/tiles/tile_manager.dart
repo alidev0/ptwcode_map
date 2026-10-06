@@ -10,7 +10,6 @@ Future<List<TilePoint>> tileManager({
   required double zoom,
   required double scale,
   required double mapScale,
-  List<LatLon>? markers,
   LatLon? gps,
 }) async {
   List<TilePoint> newList = zoom3Tiles();
@@ -36,11 +35,6 @@ Future<List<TilePoint>> tileManager({
   );
 
   newList.addAll(verticalTiles);
-
-  if (markers != null) {
-    final markerTiles = getMarkerTiles(markers: markers);
-    newList.addAll(markerTiles);
-  }
 
   if (gps != null) {
     final gpsTiles = _gpsTiles(gps: gps);
@@ -119,27 +113,6 @@ List<TilePoint> _verticalTiles({
         expand: 1,
       );
       list.addAll(hList);
-    }
-  }
-
-  return list;
-}
-
-/// getMarkerTiles
-List<TilePoint> getMarkerTiles({required List<LatLon> markers}) {
-  List<TilePoint> list = [];
-
-  final listOfZoom = [7, 11, 15];
-
-  for (var zoom in listOfZoom) {
-    for (LatLon marker in markers) {
-      final tile = latLonToTilePoint(latLon: marker, zoom: zoom);
-
-      for (var i = -1; i <= 1; i++) {
-        for (var j = -1; j <= 1; j++) {
-          list.add(TilePoint(tile.x - i, tile.y - j, tile.z));
-        }
-      }
     }
   }
 

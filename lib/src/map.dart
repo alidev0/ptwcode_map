@@ -20,6 +20,7 @@ import 'models/polyline.dart';
 import 'models/tile_point.dart';
 import 'providers/main_prov.dart';
 import 'providers/tile_prov.dart';
+import 'tiles/potential_tiles.dart';
 import 'tiles/preload_tiles.dart';
 import 'tiles/tile.dart';
 import 'tiles/tile_manager.dart';
@@ -147,15 +148,22 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
   }
 
   void _periodicFire(Timer _) async {
-    if (!_isAnim) tileProvider.downloadAll(_loadedTiles);
     _loadedTiles = await tileManager(
       center: _center,
       scale: _mapScale,
       zoom: _zoom,
       mapScale: _mapScale,
-      markers: widget.markers?.map((el) => el.latLon).toList(),
       gps: widget.gps,
     );
+
+    if (!_isAnim) tileProvider.downloadAll(_loadedTiles);
+
+    final potential = potentialTiles(
+      markers: widget.markers?.map((el) => el.latLon).toList(),
+    );
+
+    tileProvider.downloadAll(potential);
+
     if (mounted) setState(() {});
   }
 
