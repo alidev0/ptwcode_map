@@ -20,6 +20,7 @@ import 'models/polyline.dart';
 import 'models/tile_point.dart';
 import 'providers/main_prov.dart';
 import 'providers/tile_prov.dart';
+import 'tiles/potential_tiles.dart';
 import 'tiles/preload_tiles.dart';
 import 'tiles/tile.dart';
 import 'tiles/tile_manager.dart';
@@ -103,7 +104,8 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
   var _dragMode = const Offset(0, 0);
 
   var _prevScale = 0.0;
-  late LatLon _animToLatLon;
+
+  List<LatLon> _latLonAnimFromTo = [];
   List<double> _zoomAnimFromTo = [];
 
   Timer? _timer;
@@ -147,7 +149,6 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
   }
 
   void _periodicFire(Timer _) async {
-    if (!_isAnim) tileProvider.downloadAll(_loadedTiles);
     _loadedTiles = await tileManager(
       center: _center,
       scale: _mapScale,
@@ -156,6 +157,15 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
       markers: widget.markers?.map((el) => el.latLon).toList(),
       gps: widget.gps,
     );
+
+    if (!_isAnim) tileProvider.downloadAll(_loadedTiles);
+
+    final potential = potentialTiles(
+      markers: widget.markers?.map((el) => el.latLon).toList(),
+    );
+
+    tileProvider.downloadAll(potential);
+
     if (mounted) setState(() {});
   }
 
@@ -164,7 +174,10 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
     if (_isAnim) return;
     _isAnim = true;
 
-    _animToLatLon = latLon;
+    _latLonAnimFromTo = [
+      pixelPointToLatLon(pixelPoint: _center, mapScale: _mapScale),
+      latLon,
+    ];
     _zoomAnimFromTo = [_zoom, zoom];
 
     if (direct) _animCalcs(1);
@@ -304,9 +317,10 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
     _mapScale = zoomToScale(scaleRef: scaleRef, zoom: _zoom, zoomRef: zoomRef);
     _keepCenterWhenScaling();
 
-    final centerAnimTo = _latLonToPixelPoint(_animToLatLon);
-    _center.x = lerpDouble(_center.x, centerAnimTo.x, anim)!;
-    _center.y = lerpDouble(_center.y, centerAnimTo.y, anim)!;
+    final centerAnimFrom = _latLonToPixelPoint(_latLonAnimFromTo.first);
+    final centerAnimTo = _latLonToPixelPoint(_latLonAnimFromTo.last);
+    _center.x = lerpDouble(centerAnimFrom.x, centerAnimTo.x, anim)!;
+    _center.y = lerpDouble(centerAnimFrom.y, centerAnimTo.y, anim)!;
     _boundCheck();
   }
 

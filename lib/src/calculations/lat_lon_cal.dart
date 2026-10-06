@@ -26,14 +26,24 @@ PixelPoint latLonToPixelPoint({
   return PixelPoint(x, y);
 }
 
+/// pixelPointToLatLon
+LatLon pixelPointToLatLon({
+  required PixelPoint pixelPoint,
+  required double mapScale,
+}) {
+  final mapSize = getMapSize(mapScale: mapScale);
+  final lon = pixelPoint.x / mapSize * _mapLonEdge - 180;
+  final mercN = pi - 2 * pi * pixelPoint.y / mapSize;
+  final lat = (2 * atan(exp(mercN)) - pi / 2) * 180 / pi;
+
+  return LatLon(lat, lon);
+}
+
 /// latLonToTilePoint
 TilePoint latLonToTilePoint({required LatLon latLon, required int zoom}) {
   final newScale = getMapScaleForZoom(zoom.toDouble());
 
-  final center = latLonToPixelPoint(
-    latLon: latLon,
-    mapScale: newScale,
-  );
+  final center = latLonToPixelPoint(latLon: latLon, mapScale: newScale);
 
   final unitSize = getUnitSize(zoom: zoom.toDouble(), mapScale: newScale);
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../calculations/calculator.dart';
 import '../calculations/lat_lon_cal.dart';
 import '../models/lat_lon.dart';
@@ -13,7 +15,7 @@ Future<List<TilePoint>> tileManager({
   List<LatLon>? markers,
   LatLon? gps,
 }) async {
-  List<TilePoint> newList = zoom3Tiles();
+  List<TilePoint> newList = zoomTiles(zoom: 3);
 
   final newZoom = zoom.floor();
 
@@ -25,7 +27,7 @@ Future<List<TilePoint>> tileManager({
 
   final horizontalTiles = newZoom < 4
       ? <TilePoint>[]
-      : _horizontalTiles(zoom: newZoom, centerTile: centerTile);
+      : _horizontalTiles(zoom: newZoom, centerTile: centerTile, expand: 2);
 
   newList.addAll(horizontalTiles);
 
@@ -38,7 +40,7 @@ Future<List<TilePoint>> tileManager({
   newList.addAll(verticalTiles);
 
   if (markers != null) {
-    final markerTiles = getMarkerTiles(markers: markers);
+    final markerTiles = _getMarkerTiles(markers: markers);
     newList.addAll(markerTiles);
   }
 
@@ -63,6 +65,20 @@ List<TilePoint> zoom3Tiles() {
   for (var x = 0; x < 8; x++) {
     for (var y = 0; y < 8; y++) {
       list.add(TilePoint(x, y, 3));
+    }
+  }
+
+  return list;
+}
+
+List<TilePoint> zoomTiles({int zoom = 3}) {
+  final count = pow(2, zoom).toInt();
+
+  List<TilePoint> list = [];
+
+  for (var x = 0; x < count; x++) {
+    for (var y = 0; y < count; y++) {
+      list.add(TilePoint(x, y, zoom));
     }
   }
 
@@ -126,7 +142,7 @@ List<TilePoint> _verticalTiles({
 }
 
 /// getMarkerTiles
-List<TilePoint> getMarkerTiles({required List<LatLon> markers}) {
+List<TilePoint> _getMarkerTiles({required List<LatLon> markers}) {
   List<TilePoint> list = [];
 
   final listOfZoom = [7, 11, 15];
@@ -134,12 +150,15 @@ List<TilePoint> getMarkerTiles({required List<LatLon> markers}) {
   for (var zoom in listOfZoom) {
     for (LatLon marker in markers) {
       final tile = latLonToTilePoint(latLon: marker, zoom: zoom);
-
-      for (var i = -1; i <= 1; i++) {
-        for (var j = -1; j <= 1; j++) {
-          list.add(TilePoint(tile.x - i, tile.y - j, tile.z));
-        }
-      }
+      // list.add(TilePoint(tile.x - 1, tile.y - 1, tile.z));
+      list.add(TilePoint(tile.x - 1, tile.y, tile.z));
+      list.add(TilePoint(tile.x - 1, tile.y + 1, tile.z));
+      list.add(TilePoint(tile.x, tile.y - 1, tile.z));
+      list.add(TilePoint(tile.x, tile.y, tile.z));
+      list.add(TilePoint(tile.x, tile.y + 1, tile.z));
+      list.add(TilePoint(tile.x + 1, tile.y - 1, tile.z));
+      list.add(TilePoint(tile.x + 1, tile.y, tile.z));
+      list.add(TilePoint(tile.x + 1, tile.y + 1, tile.z));
     }
   }
 

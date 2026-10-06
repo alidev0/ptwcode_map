@@ -28,7 +28,7 @@ class TileProvider {
 
   void downloadAll(List<TilePoint> tiles) async {
     final limited = tiles.where((tile) => !cacheProvider.isDown(tile));
-    final limited2 = limited.take(limited.length > 100 ? 100 : limited.length);
+    final limited2 = limited.take(limited.length > 50 ? 50 : limited.length);
     await Future.wait(limited2.map(_checkAndDownload));
   }
 
