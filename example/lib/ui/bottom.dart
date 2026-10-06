@@ -120,8 +120,9 @@ class Bottom extends StatelessWidget {
     curent = ColoredBox(color: blueColor.withValues(alpha: 0.5), child: curent);
 
     final debugIcon = debugMode ? Icons.deblur : Icons.deblur_outlined;
-    final clusterIcon =
-        clusterMode ? Icons.bubble_chart : Icons.bubble_chart_outlined;
+    final clusterIcon = clusterMode
+        ? Icons.bubble_chart
+        : Icons.bubble_chart_outlined;
 
     curent = Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -131,6 +132,10 @@ class Bottom extends StatelessWidget {
         iconButton(Icons.location_pin, onTapSwitchMarkers),
         iconButton(Icons.line_axis, onTapSwitchLines),
         iconButton(Icons.location_searching, () => ctrl.animateTo(myGps, 18)),
+        // iconButton(
+        //   Icons.location_searching,
+        //   () => ctrl.animateTo(LatLon(41.5925606, 20.40223467), 8),
+        // ),
         curent,
       ],
     );

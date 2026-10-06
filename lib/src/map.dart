@@ -154,6 +154,7 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
       scale: _mapScale,
       zoom: _zoom,
       mapScale: _mapScale,
+      markers: widget.markers?.map((el) => el.latLon).toList(),
       gps: widget.gps,
     );
 
