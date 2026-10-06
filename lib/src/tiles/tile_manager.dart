@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../calculations/calculator.dart';
 import '../calculations/lat_lon_cal.dart';
 import '../models/lat_lon.dart';
@@ -12,7 +14,7 @@ Future<List<TilePoint>> tileManager({
   required double mapScale,
   LatLon? gps,
 }) async {
-  List<TilePoint> newList = zoom3Tiles();
+  List<TilePoint> newList = zoomTiles(zoom: 4);
 
   final newZoom = zoom.floor();
 
@@ -57,6 +59,20 @@ List<TilePoint> zoom3Tiles() {
   for (var x = 0; x < 8; x++) {
     for (var y = 0; y < 8; y++) {
       list.add(TilePoint(x, y, 3));
+    }
+  }
+
+  return list;
+}
+
+List<TilePoint> zoomTiles({int zoom = 3}) {
+  final count = pow(2, zoom).toInt();
+
+  List<TilePoint> list = [];
+
+  for (var x = 0; x < count; x++) {
+    for (var y = 0; y < count; y++) {
+      list.add(TilePoint(x, y, zoom));
     }
   }
 
