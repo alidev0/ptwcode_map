@@ -104,7 +104,8 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
   var _dragMode = const Offset(0, 0);
 
   var _prevScale = 0.0;
-  late LatLon _animToLatLon;
+
+  List<LatLon> _latLonAnimFromTo = [];
   List<double> _zoomAnimFromTo = [];
 
   Timer? _timer;
@@ -172,7 +173,10 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
     if (_isAnim) return;
     _isAnim = true;
 
-    _animToLatLon = latLon;
+    _latLonAnimFromTo = [
+      pixelPointToLatLon(pixelPoint: _center, mapScale: _mapScale),
+      latLon,
+    ];
     _zoomAnimFromTo = [_zoom, zoom];
 
     if (direct) _animCalcs(1);
@@ -312,9 +316,10 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
     _mapScale = zoomToScale(scaleRef: scaleRef, zoom: _zoom, zoomRef: zoomRef);
     _keepCenterWhenScaling();
 
-    final centerAnimTo = _latLonToPixelPoint(_animToLatLon);
-    _center.x = lerpDouble(_center.x, centerAnimTo.x, anim)!;
-    _center.y = lerpDouble(_center.y, centerAnimTo.y, anim)!;
+    final centerAnimFrom = _latLonToPixelPoint(_latLonAnimFromTo.first);
+    final centerAnimTo = _latLonToPixelPoint(_latLonAnimFromTo.last);
+    _center.x = lerpDouble(centerAnimFrom.x, centerAnimTo.x, anim)!;
+    _center.y = lerpDouble(centerAnimFrom.y, centerAnimTo.y, anim)!;
     _boundCheck();
   }
 
