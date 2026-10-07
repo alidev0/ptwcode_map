@@ -21,7 +21,7 @@ import 'models/tile_point.dart';
 import 'providers/main_prov.dart';
 import 'providers/tile_prov.dart';
 import 'tiles/potential_tiles.dart';
-import 'tiles/preload_tiles.dart';
+import 'tiles/pre_cache_tiles.dart';
 import 'tiles/tile.dart';
 import 'tiles/tile_manager.dart';
 import 'ui/helper.dart';
@@ -154,8 +154,7 @@ class _PTWCodeMapState extends State<PTWCodeMap> {
       scale: _mapScale,
       zoom: _zoom,
       mapScale: _mapScale,
-      markers: widget.markers?.map((el) => el.latLon).toList(),
-      gps: widget.gps,
+      target: _latLonAnimFromTo.lastOrNull,
     );
 
     if (!_isAnim) tileProvider.downloadAll(_loadedTiles);

@@ -12,8 +12,8 @@ Future<List<TilePoint>> tileManager({
   required double zoom,
   required double scale,
   required double mapScale,
-  List<LatLon>? markers,
-  LatLon? gps,
+
+  LatLon? target,
 }) async {
   List<TilePoint> newList = zoomTiles(zoom: 3);
 
@@ -39,14 +39,9 @@ Future<List<TilePoint>> tileManager({
 
   newList.addAll(verticalTiles);
 
-  if (markers != null) {
-    final markerTiles = _getMarkerTiles(markers: markers);
-    newList.addAll(markerTiles);
-  }
-
-  if (gps != null) {
-    final gpsTiles = _gpsTiles(gps: gps);
-    newList.addAll(gpsTiles);
+  if (target != null) {
+    final targetTiles = _getTargetTiles(target: target);
+    newList.addAll(targetTiles);
   }
 
   /// remove duplicated models
@@ -56,19 +51,6 @@ Future<List<TilePoint>> tileManager({
   newList.sort((a, b) => a.z - b.z);
 
   return newList;
-}
-
-/// zoom3Tiles
-List<TilePoint> zoom3Tiles() {
-  List<TilePoint> list = [];
-
-  for (var x = 0; x < 8; x++) {
-    for (var y = 0; y < 8; y++) {
-      list.add(TilePoint(x, y, 3));
-    }
-  }
-
-  return list;
 }
 
 List<TilePoint> zoomTiles({int zoom = 3}) {
@@ -128,57 +110,34 @@ List<TilePoint> _verticalTiles({
 
     list.add(TilePoint(theXIndex, theYIndex, zoomIndex));
 
+    /// load zoom -1 horizontal tiles
     if (zoomIndex == zoom - 1) {
-      final hList = _horizontalTiles(
+      final hTiles = _horizontalTiles(
         centerTile: TilePoint(theXIndex, theYIndex, zoomIndex),
         zoom: zoomIndex,
         expand: 1,
       );
-      list.addAll(hList);
+      list.addAll(hTiles);
     }
   }
 
   return list;
 }
 
-/// getMarkerTiles
-List<TilePoint> _getMarkerTiles({required List<LatLon> markers}) {
+/// _getTargetTiles
+List<TilePoint> _getTargetTiles({required LatLon target, int expand = 1}) {
   List<TilePoint> list = [];
 
-  final listOfZoom = [7, 11, 15];
+  var zoom = 22;
 
-  for (var zoom in listOfZoom) {
-    for (LatLon marker in markers) {
-      final tile = latLonToTilePoint(latLon: marker, zoom: zoom);
-      // list.add(TilePoint(tile.x - 1, tile.y - 1, tile.z));
-      list.add(TilePoint(tile.x - 1, tile.y, tile.z));
-      list.add(TilePoint(tile.x - 1, tile.y + 1, tile.z));
-      list.add(TilePoint(tile.x, tile.y - 1, tile.z));
-      list.add(TilePoint(tile.x, tile.y, tile.z));
-      list.add(TilePoint(tile.x, tile.y + 1, tile.z));
-      list.add(TilePoint(tile.x + 1, tile.y - 1, tile.z));
-      list.add(TilePoint(tile.x + 1, tile.y, tile.z));
-      list.add(TilePoint(tile.x + 1, tile.y + 1, tile.z));
-    }
-  }
-
-  return list;
-}
-
-/// _gpsTiless
-List<TilePoint> _gpsTiles({required LatLon gps}) {
-  List<TilePoint> list = [];
-
-  final listOfZoom = [7, 11, 15];
-
-  for (var zoom in listOfZoom) {
-    final tile = latLonToTilePoint(latLon: gps, zoom: zoom);
-
-    for (var i = -1; i <= 1; i++) {
-      for (var j = -1; j <= 1; j++) {
+  while (zoom >= 3) {
+    for (var i = -expand; i <= expand; i++) {
+      for (var j = -expand; j <= expand; j++) {
+        final tile = latLonToTilePoint(latLon: target, zoom: zoom);
         list.add(TilePoint(tile.x - i, tile.y - j, tile.z));
       }
     }
+    zoom--;
   }
 
   return list;

@@ -12,7 +12,7 @@ class MapCtrl {
   late void Function(LatLon, double) animateTo;
 
   /// preload tiles for your locations
-  static void preload({
+  static void preCache({
     required String user,
     required String styleId,
     required String accessToken,
@@ -27,6 +27,6 @@ class MapCtrl {
       accessToken: accessToken,
     );
 
-    preloadTiles(locations);
+    preCacheTiles(locations);
   }
 }

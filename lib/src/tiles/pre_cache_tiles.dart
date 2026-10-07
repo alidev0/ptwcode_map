@@ -5,12 +5,12 @@ import 'potential_tiles.dart';
 import 'tile_manager.dart';
 
 /// preloadTiles
-void preloadTiles(List<LatLon> locations) async {
-  List<TilePoint> tiles = zoom3Tiles();
+void preCacheTiles(List<LatLon> locations) async {
+  List<TilePoint> tiles = zoomTiles(zoom: 3);
 
-  final markerTiles = getMarkerTiles(markers: locations);
-
+  final markerTiles = potentialTiles(markers: locations);
   tiles.addAll(markerTiles);
+  
   tiles = tiles.toSet().toList();
   tileProvider.downloadAll(tiles);
 }

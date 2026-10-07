@@ -2,12 +2,17 @@ import '../calculations/lat_lon_cal.dart';
 import '../models/lat_lon.dart';
 import '../models/tile_point.dart';
 
-List<TilePoint> potentialTiles({List<LatLon>? markers}) {
+List<TilePoint> potentialTiles({List<LatLon>? markers, LatLon? gps}) {
   List<TilePoint> newList = [];
 
   if (markers != null) {
-    final markerTiles = getMarkerTiles(markers: markers);
+    final markerTiles = _getTiles(markers: markers);
     newList.addAll(markerTiles);
+  }
+
+  if (gps != null) {
+    final gpsTiles = _getTiles(markers: [gps]);
+    newList.addAll(gpsTiles);
   }
 
   /// remove duplicated models
@@ -17,10 +22,10 @@ List<TilePoint> potentialTiles({List<LatLon>? markers}) {
 }
 
 /// getMarkerTiles
-List<TilePoint> getMarkerTiles({required List<LatLon> markers}) {
+List<TilePoint> _getTiles({required List<LatLon> markers}) {
   List<TilePoint> list = [];
 
-  final listOfZoom = [7, 11, 15];
+  final listOfZoom = [6, 9, 12, 15, 17, 20]; // +3
 
   for (var zoom in listOfZoom) {
     for (LatLon marker in markers) {
