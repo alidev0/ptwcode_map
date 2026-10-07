@@ -1,3 +1,6 @@
+## 1.4.3
+- reduce tile load
+
 ## 1.4.2
 - reduce tile load
 - optim animation
